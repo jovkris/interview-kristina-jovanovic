@@ -1,25 +1,54 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { updateTodo } from './../api/actions'
+// import { updateTodoAction } from './../api/actions';
 
 
-const TodoForm = ({ editValue, id, handleCreateTodo }) => {
+const TodoForm = ({ editValue, id, handleCreateTodo, setEdit, handleUpdateTodo }) => {
     const [input, setInput] = useState(editValue !== undefined ? editValue.trim() : '');
 
-    const inputRef = useRef(null)
+    const inputRef = useRef(null);
+
+    const formRef = useRef(null);
 
     useEffect(() => {
-        inputRef.current.focus()
+        inputRef.current.focus();
+    })
+
+    const clickHandler = (e) => {
+
+        if (setEdit && formRef.current && !formRef.current.contains(e.target)) {
+            setEdit(false);
+        }
+        else if (setEdit && e.key === "Escape") {
+            setEdit(false);
+        }
+    }
+
+    useEffect(() => {
+        document.addEventListener("mousedown", clickHandler);
+        return () => {
+            document.removeEventListener("mousedown", clickHandler);
+        }
+    })
+
+    useEffect(() => {
+        document.addEventListener("keydown", clickHandler);
+        return () => {
+            document.removeEventListener("keydown", clickHandler);
+        }
     })
 
     const handleChange = (e) => {
         setInput(e.target.value);
     }
 
+    const handleEdit = () => setEdit(false);
+
+
     const handleSubmit = e => {
         e.preventDefault();
 
         if (id) {
-            updateTodo(id, { text: input })
+            handleUpdateTodo(id, input, handleEdit)
         } else {
             handleCreateTodo({ text: input })
         }
@@ -28,7 +57,7 @@ const TodoForm = ({ editValue, id, handleCreateTodo }) => {
     }
 
     return (
-        <form className='todo-form row center-align' onSubmit={handleSubmit} >
+        <form className='todo-form row center-align' onSubmit={handleSubmit} ref={formRef} >
             <>
                 <div className='input-field'>
                     <input
@@ -39,9 +68,10 @@ const TodoForm = ({ editValue, id, handleCreateTodo }) => {
                         className="todo-input"
                         onChange={handleChange}
                         ref={inputRef}
+
                     />
                 </div>
-                <button className='waves-effect waves-light btn blue'>{id ? 'Update' : 'Add todo'}</button>
+                <button disabled={input.trim() === ''} className='waves-effect waves-light btn blue'>{id ? 'Update' : 'Add todo'}</button>
             </>
         </form>
     );

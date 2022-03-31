@@ -1,6 +1,6 @@
 import { todosEndpoint } from "./endpoints";
 
-export const getAllTodos = async () => {
+export const getAllTodosAction = async () => {
     try {
         let res = await fetch(todosEndpoint, {
             method: "GET",
@@ -11,7 +11,7 @@ export const getAllTodos = async () => {
     }
 }
 
-export const updateTodo = async (id, body) => {
+export const updateTodoAction = async (id, body) => {
     try {
         let res = await fetch(`${todosEndpoint}/${id}`, {
             method: "PUT",
@@ -26,7 +26,7 @@ export const updateTodo = async (id, body) => {
     }
 }
 
-export const createTodo = async (body) => {
+export const createTodoAction = async (body) => {
     try {
         let res = await fetch(`${todosEndpoint}`, {
             method: "POST",
@@ -41,7 +41,7 @@ export const createTodo = async (body) => {
     }
 }
 
-export const deleteTodo = async (id) => {
+export const deleteTodoAction = async (id) => {
     try {
         let res = await fetch(`${todosEndpoint}/${id}`, {
             method: "DELETE",
