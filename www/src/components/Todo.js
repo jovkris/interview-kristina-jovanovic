@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import TodoForm from './TodoForm';
-// import { updateTodoAction, deleteTodoAction } from './../api/actions'
+
 
 
 const Todo = ({ todo, handleCompleteTodo, handleDeleteTodo, handleUpdateTodo }) => {

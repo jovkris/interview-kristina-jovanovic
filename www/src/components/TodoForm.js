@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-// import { updateTodoAction } from './../api/actions';
+
 
 
 const TodoForm = ({ editValue, id, handleCreateTodo, setEdit, handleUpdateTodo }) => {
@@ -11,7 +11,7 @@ const TodoForm = ({ editValue, id, handleCreateTodo, setEdit, handleUpdateTodo }
 
     useEffect(() => {
         inputRef.current.focus();
-    })
+    });
 
     const clickHandler = (e) => {
 
@@ -21,25 +21,25 @@ const TodoForm = ({ editValue, id, handleCreateTodo, setEdit, handleUpdateTodo }
         else if (setEdit && e.key === "Escape") {
             setEdit(false);
         }
-    }
+    };
 
     useEffect(() => {
         document.addEventListener("mousedown", clickHandler);
         return () => {
             document.removeEventListener("mousedown", clickHandler);
-        }
-    })
+        };
+    });
 
     useEffect(() => {
         document.addEventListener("keydown", clickHandler);
         return () => {
             document.removeEventListener("keydown", clickHandler);
-        }
-    })
+        };
+    });
 
     const handleChange = (e) => {
         setInput(e.target.value);
-    }
+    };
 
     const handleEdit = () => setEdit(false);
 
@@ -48,13 +48,13 @@ const TodoForm = ({ editValue, id, handleCreateTodo, setEdit, handleUpdateTodo }
         e.preventDefault();
 
         if (id) {
-            handleUpdateTodo(id, input, handleEdit)
+            handleUpdateTodo(id, input, handleEdit);
         } else {
-            handleCreateTodo({ text: input })
+            handleCreateTodo({ text: input });
         }
 
         setInput('');
-    }
+    };
 
     return (
         <form className='todo-form row center-align' onSubmit={handleSubmit} ref={formRef} >
@@ -75,6 +75,6 @@ const TodoForm = ({ editValue, id, handleCreateTodo, setEdit, handleUpdateTodo }
             </>
         </form>
     );
-}
+};
 
 export default TodoForm;
