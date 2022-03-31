@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { v4 as uuidv4 } from 'uuid';
+import { updateTodo } from './../api/actions'
 
 
-const TodoForm = (props) => {
-    const [input, setInput] = useState(props.edit ? props.edit.value.trim() : '');
+const TodoForm = ({ editValue, id, handleCreateTodo }) => {
+    const [input, setInput] = useState(editValue !== undefined ? editValue.trim() : '');
 
     const inputRef = useRef(null)
 
@@ -18,54 +18,31 @@ const TodoForm = (props) => {
     const handleSubmit = e => {
         e.preventDefault();
 
-        props.onSubmit({
-            id: uuidv4(),
-            text: input,
-        });
+        if (id) {
+            updateTodo(id, { text: input })
+        } else {
+            handleCreateTodo({ text: input })
+        }
 
         setInput('');
     }
 
     return (
         <form className='todo-form row center-align' onSubmit={handleSubmit} >
-            {props.edit ? (
-                <>
-                    <div className='input-field'>
-                        <input
-                            type='text'
-                            placeholder="Update your todo"
-                            value={input}
-                            name="text"
-                            className="todo-input"
-                            onChange={handleChange}
-                            ref={inputRef}
-                        />
-                    </div>
-                    <button className='waves-effect waves-light btn blue'>Update</button>
-                    <button className='waves-effect waves-light btn red lighten-1' onClick={(e) => {
-                        e.preventDefault();
-                        setInput('')
-                    }}>Clear</button>
-                </>
-            ) : (
-
-                <>
-                    <div className='input-field'>
-                        <input
-                            type='text'
-                            placeholder="Add a todo"
-                            value={input}
-                            name="text"
-                            className="todo-input"
-                            onChange={handleChange}
-                            ref={inputRef}
-                        />
-                    </div>
-                    <button className='waves-effect waves-light btn blue accent-2'>Add todo</button>
-                </>
-            )}
-
-
+            <>
+                <div className='input-field'>
+                    <input
+                        type='text'
+                        placeholder={id ? 'Update your todo' : 'Add a todo'}
+                        value={input}
+                        name="text"
+                        className="todo-input"
+                        onChange={handleChange}
+                        ref={inputRef}
+                    />
+                </div>
+                <button className='waves-effect waves-light btn blue'>{id ? 'Update' : 'Add todo'}</button>
+            </>
         </form>
     );
 }

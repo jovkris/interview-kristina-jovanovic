@@ -1,53 +1,33 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { createTodo, getAllTodos } from '../api/actions';
 import Todo from './Todo';
 import TodoForm from './TodoForm';
 
 const TodoList = () => {
     const [todos, setTodos] = useState([]);
-
-    const addTodo = todo => {
+    useEffect(() => {
+        const testFunction = async () => {
+            const { data } = await getAllTodos();
+            setTodos(data);
+        }
+        testFunction();
+    }, [])
+    const handleCreateTodo = async (todo) => {
         if (!todo.text.trim()) {
             return;
         }
-
-        const newTodos = [todo, ...todos];
-
-        setTodos(newTodos);
-    }
-
-    const updateTodo = (todoId, newValue) => {
-        if (!newValue.text) {
-            return;
+        const { status, data } = await createTodo(todo);
+        if (status >= 200 && status < 300) {
+            const newTodos = [...todos, data];
+            setTodos(newTodos);
         }
-        setTodos(prev => prev.map(item => (item.id === todoId ? newValue : item)));
     }
 
-    const removeTodo = id => {
-        const removeArr = [...todos].filter(todo => todo.id !== id)
-        setTodos(removeArr);
-    }
-
-
-    const completeTodo = (id) => {
-        let updatedTodos = todos.map(todo => {
-            if (todo.id === id) {
-                todo.isComplete = !todo.isComplete;
-            }
-            return todo;
-        })
-
-        setTodos(updatedTodos);
-    }
     return (
         <div className='row'>
             <h2>What's the <br></br> plan?</h2>
-            <TodoForm onSubmit={addTodo} />
-            <Todo
-                todos={todos}
-                completeTodo={completeTodo}
-                removeTodo={removeTodo}
-                updateTodo={updateTodo}
-            />
+            <TodoForm handleCreateTodo={handleCreateTodo} />
+            {todos?.map(todo => <Todo key={todo._id} todo={todo} />)}
         </div>
     );
 }
